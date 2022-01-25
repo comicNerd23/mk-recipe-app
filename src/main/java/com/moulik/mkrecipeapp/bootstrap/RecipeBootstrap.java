@@ -4,16 +4,21 @@ import com.moulik.mkrecipeapp.domain.*;
 import com.moulik.mkrecipeapp.repositories.CategoryRepository;
 import com.moulik.mkrecipeapp.repositories.RecipeRepository;
 import com.moulik.mkrecipeapp.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
-public class RecipeBootstrap implements CommandLineRunner {
+public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
@@ -133,6 +138,7 @@ public class RecipeBootstrap implements CommandLineRunner {
 
         //add to return list
         recipes.add(guacRecipe);
+        log.debug("Added Guacamole Recipe");
 
         //Yummy Tacos
         Recipe tacosRecipe = new Recipe();
@@ -191,11 +197,13 @@ public class RecipeBootstrap implements CommandLineRunner {
         tacosRecipe.getCategories().add(mexicanCategory);
 
         recipes.add(tacosRecipe);
+        log.debug("Added Tacos Recipe");
         return recipes;
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    @Transactional
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         recipeRepository.saveAll(getRecipes());
     }
 }
