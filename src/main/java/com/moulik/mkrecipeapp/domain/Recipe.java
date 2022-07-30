@@ -1,12 +1,17 @@
 package com.moulik.mkrecipeapp.domain;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Entity
 public class Recipe {
 
@@ -31,6 +36,7 @@ public class Recipe {
     private Notes notes;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy="recipe")
+    @ToString.Exclude
     private Set<Ingredient> ingredients = new HashSet<>();
 
     @Enumerated(value = EnumType.STRING)
@@ -41,6 +47,7 @@ public class Recipe {
         joinColumns = @JoinColumn(name = "recipe_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id")
     )
+    @ToString.Exclude
     private Set<Category> categories = new HashSet<>();
 
     public void setNotes(Notes notes) {
@@ -54,4 +61,32 @@ public class Recipe {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Recipe recipe = (Recipe) o;
+        return id != null && Objects.equals(id, recipe.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Recipe.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("description='" + description + "'")
+                .add("prepTime=" + prepTime)
+                .add("cookTime=" + cookTime)
+                .add("servings=" + servings)
+                .add("source='" + source + "'")
+                .add("url='" + url + "'")
+                .add("directions='" + directions + "'")
+                .add("notes=" + notes)
+                .add("difficulty=" + difficulty)
+                .toString();
+    }
 }

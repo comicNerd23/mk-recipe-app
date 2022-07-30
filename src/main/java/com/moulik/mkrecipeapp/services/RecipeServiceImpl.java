@@ -19,4 +19,10 @@ public class RecipeServiceImpl implements RecipeService {
     public Iterable<Recipe> getRecipes() {
         return recipeRepository.findAll();
     }
+
+    @Override
+    public Recipe findById(Long id) {
+        return recipeRepository.findById(id).
+                orElseThrow(() -> new RuntimeException("Recipe Not Found"));
+    }
 }

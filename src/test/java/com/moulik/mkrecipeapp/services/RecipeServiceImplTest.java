@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,5 +41,16 @@ class RecipeServiceImplTest {
         assertEquals(1, recipes.spliterator().getExactSizeIfKnown());
         verify(recipeRepository, times(1)).findAll();
 
+    }
+
+    @Test
+    void getRecipeByIdTest() {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        when(recipeRepository.findById(1L)).thenReturn(Optional.of(recipe));
+
+        Recipe rec = recipeService.findById(1L);
+        assertNotNull(rec);
+        assertEquals(1L, rec.getId());
     }
 }
