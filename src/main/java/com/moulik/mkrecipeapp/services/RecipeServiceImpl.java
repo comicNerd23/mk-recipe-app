@@ -1,5 +1,8 @@
 package com.moulik.mkrecipeapp.services;
 
+import com.moulik.mkrecipeapp.commands.RecipeCommand;
+import com.moulik.mkrecipeapp.converters.RecipeCommandToRecipe;
+import com.moulik.mkrecipeapp.converters.RecipeToRecipeCommand;
 import com.moulik.mkrecipeapp.domain.Recipe;
 import com.moulik.mkrecipeapp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +13,13 @@ import org.springframework.stereotype.Service;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, RecipeCommandToRecipe recipeCommandToRecipe, RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepository = recipeRepository;
+        this.recipeCommandToRecipe = recipeCommandToRecipe;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
     @Override
@@ -24,5 +31,12 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe findById(Long id) {
         return recipeRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Recipe Not Found"));
+    }
+
+    @Override
+    public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
+        Recipe detachedRecipe = recipeCommandToRecipe.convert(recipeCommand);
+        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
+        return recipeToRecipeCommand.convert(savedRecipe);
     }
 }

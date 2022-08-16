@@ -1,5 +1,7 @@
 package com.moulik.mkrecipeapp.services;
 
+import com.moulik.mkrecipeapp.converters.RecipeCommandToRecipe;
+import com.moulik.mkrecipeapp.converters.RecipeToRecipeCommand;
 import com.moulik.mkrecipeapp.domain.Recipe;
 import com.moulik.mkrecipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +28,9 @@ class RecipeServiceImplTest {
         //MockitoAnnotations.initMocks(this);
         MockitoAnnotations.openMocks(this);
 
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        RecipeCommandToRecipe recipeCommandToRecipe = new RecipeCommandToRecipe(null, null, null);
+        RecipeToRecipeCommand recipeToRecipeCommand = null;
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test
