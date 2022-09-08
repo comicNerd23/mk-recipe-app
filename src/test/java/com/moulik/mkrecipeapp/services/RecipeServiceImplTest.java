@@ -4,6 +4,7 @@ import com.moulik.mkrecipeapp.converters.RecipeCommandToRecipe;
 import com.moulik.mkrecipeapp.converters.RecipeToRecipeCommand;
 import com.moulik.mkrecipeapp.domain.Recipe;
 import com.moulik.mkrecipeapp.repositories.RecipeRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -23,10 +24,12 @@ class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    AutoCloseable autoCloseable;
+
     @BeforeEach
     void setUp() {
         //MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.openMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
 
         RecipeCommandToRecipe recipeCommandToRecipe = new RecipeCommandToRecipe(null, null, null);
         RecipeToRecipeCommand recipeToRecipeCommand = null;
@@ -56,5 +59,10 @@ class RecipeServiceImplTest {
         Recipe rec = recipeService.findById(1L);
         assertNotNull(rec);
         assertEquals(1L, rec.getId());
+    }
+
+    @AfterEach
+    void shutdown() throws Exception {
+        autoCloseable.close();
     }
 }
