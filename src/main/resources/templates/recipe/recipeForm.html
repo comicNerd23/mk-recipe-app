@@ -80,7 +80,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-md-11">
-                                    <h4 class="card-title">Ingredient</h4>
+                                    <h4 class="card-title form-label">Ingredient</h4>
                                 </div>
                                 <div class="col-md-1">
                                     <a class="btn btn-default" role="button" href="#">Edit</a>
@@ -94,7 +94,7 @@
                                         <li th:remove="all">1 cup of milk</li>
                                         <li th:remove="all">1 cup of milk</li>
                                         <li th:each="ingredient : ${recipe.ingredients}"
-                                            th:text="${(ingredient.getAmount() + ' ' + ingredient.uom.getDescription()
+                                            th:text="${(ingredient.getAmount() + ' ' + ingredient.unitOfMeasureCommand.getDescription()
                                             + ' - ' + ingredient.getDescription())}">
                                             1 teaspoon of sugar
                                         </li>
@@ -105,14 +105,13 @@
                     </div>
                     <div class="card my-3">
                         <div class="card-header">
-                             <h4 class="card-title">Directions</h4>
+                             <h4 class="card-title form-label">Directions</h4>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12 form-group">
-                                    <label>
-                                        <textarea id="directions" th:field="*{directions}"></textarea>
-                                    </label>
+                                    <label for="directions"></label>
+                                    <textarea id="directions" class="form-control" rows="3" th:field="*{directions}"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -124,9 +123,8 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12 form-group">
-                                    <label>
-                                        <textarea id="notes" th:field="*{notes.recipeNotes}"></textarea>
-                                    </label>
+                                    <label for="notes"></label>
+                                    <textarea id="notes" class="form-control" rows="3" th:field="*{notes.recipeNotes}"></textarea>
                                 </div>
                             </div>
                         </div>
