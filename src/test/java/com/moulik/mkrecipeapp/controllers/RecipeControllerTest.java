@@ -56,4 +56,12 @@ public class RecipeControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.view().name("404error"));
     }
+
+    @Test
+    void testGetRecipeIncorrectNumberFormat() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/asdf/show"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.view().name("400error"));
+    }
 }
