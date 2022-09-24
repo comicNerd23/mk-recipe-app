@@ -53,7 +53,11 @@
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <label for="difficulty" class="form-label">Difficulty</label>
-                                    <select class="form-control" id="difficulty">
+                                    <select class="form-control" id="difficulty" th:field="*{difficulty}">
+                                        <option th:each="difficultyValue: ${T(com.moulik.mkrecipeapp.domain.Difficulty).values()}"
+                                        th:value="${difficultyValue.name()}" th:text="${difficultyValue.name()}">Easy</option>
+                                    </select>
+                                    <select class="form-control" th:remove="all">
                                         <option>Easy</option>
                                         <option>Medium</option>
                                         <option>Hard</option>
