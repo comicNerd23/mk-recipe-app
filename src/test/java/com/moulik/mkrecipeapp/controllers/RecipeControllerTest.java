@@ -1,6 +1,7 @@
 package com.moulik.mkrecipeapp.controllers;
 
 import com.moulik.mkrecipeapp.domain.Recipe;
+import com.moulik.mkrecipeapp.exceptions.NotFoundException;
 import com.moulik.mkrecipeapp.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,16 @@ public class RecipeControllerTest {
 
     @Mock
     RecipeService recipeService;
-    
+
+    MockMvc mockMvc;
+
     @BeforeEach
     void setUp() {
         //MockitoAnnotations.initMocks(this);
         //MockitoAnnotations.openMocks(this);
         recipeController = new RecipeController(recipeService);
+
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
     }
 
     @Test
@@ -35,11 +40,20 @@ public class RecipeControllerTest {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         when(recipeService.findById(anyLong())).thenReturn(recipe);
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("recipe/show"))
                 .andExpect(MockMvcResultMatchers.model().attributeExists("recipe"));
+    }
+
+    @Test
+    void testGetRecipeNotFound() throws Exception {
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipe/1/show"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.view().name("404error"));
     }
 }
