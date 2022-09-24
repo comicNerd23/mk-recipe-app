@@ -3,8 +3,6 @@ package com.moulik.mkrecipeapp.converters;
 import com.moulik.mkrecipeapp.commands.CategoryCommand;
 import com.moulik.mkrecipeapp.commands.IngredientCommand;
 import com.moulik.mkrecipeapp.commands.RecipeCommand;
-import com.moulik.mkrecipeapp.domain.Category;
-import com.moulik.mkrecipeapp.domain.Ingredient;
 import com.moulik.mkrecipeapp.domain.Recipe;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
@@ -40,6 +38,7 @@ public class RecipeToRecipeCommand implements Converter<Recipe, RecipeCommand> {
         command.setPrepTime(source.getPrepTime());
         command.setDifficulty(source.getDifficulty());
         command.setDirections(source.getDirections());
+        command.setImage(source.getImage());
         command.setNotes(notesConverter.convert(source.getNotes()));
         Set<CategoryCommand> categorySet = new HashSet<>();
         source.getCategories().forEach(c -> categorySet.add(categoryConverter.convert(c)));
