@@ -4,6 +4,7 @@ import com.moulik.mkrecipeapp.commands.RecipeCommand;
 import com.moulik.mkrecipeapp.converters.RecipeCommandToRecipe;
 import com.moulik.mkrecipeapp.converters.RecipeToRecipeCommand;
 import com.moulik.mkrecipeapp.domain.Recipe;
+import com.moulik.mkrecipeapp.exceptions.NotFoundException;
 import com.moulik.mkrecipeapp.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(Long id) {
         return recipeRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Recipe Not Found"));
+                orElseThrow(() -> new NotFoundException("Recipe Not Found"));
     }
 
     @Override

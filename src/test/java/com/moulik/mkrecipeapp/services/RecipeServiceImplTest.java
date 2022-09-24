@@ -3,6 +3,7 @@ package com.moulik.mkrecipeapp.services;
 import com.moulik.mkrecipeapp.converters.RecipeCommandToRecipe;
 import com.moulik.mkrecipeapp.converters.RecipeToRecipeCommand;
 import com.moulik.mkrecipeapp.domain.Recipe;
+import com.moulik.mkrecipeapp.exceptions.NotFoundException;
 import com.moulik.mkrecipeapp.repositories.RecipeRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,8 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,12 +66,21 @@ class RecipeServiceImplTest {
         assertNotNull(rec);
         assertEquals(1L, rec.getId());
     }
+
     @Test
     void deleteRecipeByIdTest() {
         Long id = 0L;
         recipeService.deleteRecipeById(id);
 
         verify(recipeRepository).deleteById(0L);
+    }
+
+    @Test
+    public void getRecipeByIdTestNotFound() {
+        Optional<Recipe> optionalRecipe = Optional.empty();
+        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+        Exception e = assertThrows(NotFoundException.class, ()-> recipeService.findById(1L));
+        assertEquals("Recipe Not Found", e.getMessage());
     }
 
     @AfterEach
